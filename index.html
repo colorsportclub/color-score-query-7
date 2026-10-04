@@ -3,6 +3,7 @@
 <html lang="zh-Hant">
 
 <head>
+
   <meta charset="UTF-8">
 
 <meta
@@ -919,9 +920,7 @@ content="width=device-width, initial-scale=1.0"
       }
 
 
-      // ==================================================
-      // 先複製資料
-      // ==================================================
+      // 複製資料
 
       const results =
         data.slice();
@@ -929,7 +928,6 @@ content="width=device-width, initial-scale=1.0"
 
       // ==================================================
       // 日期由近到遠
-      // 最新日期排最前面
       // ==================================================
 
       results.sort(
@@ -949,7 +947,7 @@ content="width=device-width, initial-scale=1.0"
 
 
       // ==================================================
-      // 判斷最佳成績
+      // 找最佳成績
       // ==================================================
 
       const bestIndexes =
@@ -981,7 +979,7 @@ content="width=device-width, initial-scale=1.0"
 
 
           // ==================================================
-          // 最佳成績標示
+          // 最佳成績
           // ==================================================
 
           if (
@@ -1116,7 +1114,18 @@ content="width=device-width, initial-scale=1.0"
       let bestValue = null;
 
 
-      // 判斷是不是時間類項目
+      if (
+        results.length === 0
+      ) {
+
+        return bestIndexes;
+
+      }
+
+
+      // ==================================================
+      // 判斷項目是不是時間類
+      // ==================================================
 
       const itemName =
         String(
@@ -1129,6 +1138,10 @@ content="width=device-width, initial-scale=1.0"
           itemName
         );
 
+
+      // ==================================================
+      // 逐筆比較
+      // ==================================================
 
       results.forEach(
         function(row, index) {
@@ -1164,11 +1177,13 @@ content="width=device-width, initial-scale=1.0"
           }
 
 
+          // ==================================================
+          // 時間類：越短越好
+          // ==================================================
+
           if (
             isTimeEvent
           ) {
-
-            // 時間越短越好
 
             if (
               value < bestValue
@@ -1193,9 +1208,13 @@ content="width=device-width, initial-scale=1.0"
             }
 
           }
-          else {
 
-            // 分數／距離越高越好
+
+          // ==================================================
+          // 一般數值：越高越好
+          // ==================================================
+
+          else {
 
             if (
               value > bestValue
@@ -1304,15 +1323,29 @@ content="width=device-width, initial-scale=1.0"
 
 
     // ==================================================
-    // 將成績轉成數字
+    // ⭐ 成績轉成可以比較的數值
+    //
+    // 支援：
+    //
+    // 12
+    // 12.35
+    // 1:25
+    // 1:25.36
+    // 10:15
+    // 10:15.27
+    //
+    // 有冒號：
+    // 分鐘 : 秒
+    //
+    // 沒有冒號：
+    // 直接視為秒數
     // ==================================================
 
     function parseScore(score) {
 
       if (
         score === null ||
-        score === undefined ||
-        score === ""
+        score === undefined
       ) {
 
         return null;
@@ -1326,14 +1359,77 @@ content="width=device-width, initial-scale=1.0"
         ).trim();
 
 
-      /*
-      支援：
-      19.81
-      20.05
-      19.81秒
-      19.81 s
-      */
+      if (
+        text === ""
+      ) {
 
+        return null;
+
+      }
+
+
+      // ==================================================
+      // 格式：分:秒
+      // 例如：
+      //
+      // 1:25
+      // 1:25.36
+      // 10:15.27
+      // ==================================================
+
+      if (
+        text.includes(":")
+      ) {
+
+        const parts =
+          text.split(":");
+
+
+        if (
+          parts.length === 2
+        ) {
+
+          const minutes =
+            Number(
+              parts[0].trim()
+            );
+
+
+          const seconds =
+            Number(
+              parts[1]
+                .trim()
+                .replace(
+                  /[^0-9.]/g,
+                  ""
+                )
+            );
+
+
+          if (
+            !isNaN(minutes) &&
+            !isNaN(seconds)
+          ) {
+
+            return (
+              minutes * 60 +
+              seconds
+            );
+
+          }
+
+        }
+
+      }
+
+
+      // ==================================================
+      // 一般秒數
+      //
+      // 12
+      // 12.35
+      // 19.81秒
+      // ==================================================
 
       const match =
         text.match(
@@ -1402,9 +1498,15 @@ content="width=device-width, initial-scale=1.0"
       ) {
 
         return new Date(
-          Number(match[1]),
-          Number(match[2]) - 1,
-          Number(match[3])
+          Number(
+            match[1]
+          ),
+          Number(
+            match[2]
+          ) - 1,
+          Number(
+            match[3]
+          )
         ).getTime();
 
       }
@@ -1466,9 +1568,11 @@ content="width=device-width, initial-scale=1.0"
         return (
           match[1] +
           "/" +
-          ("0" + match[2]).slice(-2) +
+          ("0" + match[2])
+            .slice(-2) +
           "/" +
-          ("0" + match[3]).slice(-2)
+          ("0" + match[3])
+            .slice(-2)
         );
 
       }
@@ -1564,5 +1668,3 @@ content="width=device-width, initial-scale=1.0"
   </script>
 
 </body>
-
-</html>
