@@ -4,1678 +4,1244 @@
 
 <head>
 
-  <meta charset="UTF-8">
+<meta charset="UTF-8">
 
-<meta
-name="viewport"
-content="width=device-width, initial-scale=1.0"
+<meta name="viewport"
+   content="width=device-width, initial-scale=1.0">
 
->
+<title>COLOR成績查詢系統</title>
 
-  <title>COLOR成績查詢系統</title>
+<style>
 
-  <style>
+* {
+  box-sizing: border-box;
+}
 
-    * {
-      box-sizing: border-box;
-    }
+body {
+  margin: 0;
+  padding: 12px;
+  background: #f5f7fa;
+  font-family:
+    Arial,
+    "Noto Sans TC",
+    sans-serif;
+  color: #333;
+}
 
-    body {
-      margin: 0;
-      padding: 12px;
-      font-family:
-        Arial,
-        "Noto Sans TC",
-        sans-serif;
-      background: #f5f7fa;
-      color: #333;
-    }
+.container {
+  width: 100%;
+  max-width: 700px;
+  margin: 15px auto;
+  padding: 20px;
+  background: white;
+  border-radius: 14px;
+  box-shadow:
+    0 3px 15px rgba(0,0,0,0.08);
+}
 
-    .container {
-      width: 100%;
-      max-width: 700px;
-      margin: 10px auto;
-      background: #ffffff;
-      padding: 18px;
-      border-radius: 14px;
-      box-shadow:
-        0 3px 15px
-        rgba(0, 0, 0, 0.08);
-    }
+h1 {
+  margin: 0 0 25px;
+  text-align: center;
+  font-size: 27px;
+}
 
-    h1 {
-      text-align: center;
-      margin: 0 0 22px;
-      font-size: 26px;
-    }
+.form-group {
+  margin-bottom: 16px;
+}
 
-    .form-group {
-      margin-bottom: 15px;
-    }
+label {
+  display: block;
+  margin-bottom: 7px;
+  font-weight: bold;
+  font-size: 16px;
+}
 
-    label {
-      display: block;
-      margin-bottom: 7px;
-      font-weight: bold;
-      font-size: 16px;
-    }
+input,
+select {
+  width: 100%;
+  height: 46px;
+  padding: 0 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: white;
+  font-size: 16px;
+}
 
-    input,
-    select {
-      width: 100%;
-      height: 45px;
-      padding: 0 11px;
-      border: 1px solid #cccccc;
-      border-radius: 8px;
-      font-size: 16px;
-      background: #ffffff;
-    }
+input:focus,
+select:focus {
+  outline: none;
+  border-color: #1976d2;
+}
 
-    input:focus,
-    select:focus {
-      outline: none;
-      border-color: #1976d2;
-    }
+select:disabled {
+  background: #eeeeee;
+  color: #888;
+}
 
-    select:disabled {
-      background: #eeeeee;
-      color: #999999;
-    }
+button {
+  width: 100%;
+  height: 47px;
+  margin-top: 2px;
+  border: none;
+  border-radius: 8px;
+  background: #1976d2;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+}
 
-    button {
-      width: 100%;
-      height: 46px;
-      margin-top: 3px;
-      border: none;
-      border-radius: 8px;
-      background: #1976d2;
-      color: #ffffff;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-    }
+button:disabled {
+  background: #aaa;
+}
 
-    button:hover {
-      background: #125ca5;
-    }
+.result {
+  margin-top: 25px;
+}
 
-    button:disabled {
-      background: #aaaaaa;
-      cursor: not-allowed;
-    }
+.result-title {
+  margin-bottom: 12px;
+  font-size: 19px;
+  font-weight: bold;
+}
 
-    .result {
-      margin-top: 25px;
-    }
+.result-card {
+  margin-bottom: 12px;
+  overflow: hidden;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background: white;
+}
 
-    .result-title {
-      font-size: 19px;
-      font-weight: bold;
-      margin-bottom: 12px;
-    }
+.result-card.best {
+  border: 2px solid #f0b400;
+}
 
-    /* ================================
-       成績卡片
-       ================================ */
+.best-badge {
+  padding: 8px;
+  background: #fff8dc;
+  color: #946d00;
+  text-align: center;
+  font-size: 14px;
+  font-weight: bold;
+}
 
-    .result-card {
-      width: 100%;
-      border: 1px solid #dddddd;
-      border-radius: 10px;
-      overflow: hidden;
-      background: #ffffff;
-      margin-bottom: 12px;
-    }
+.result-row {
+  display: flex;
+  width: 100%;
+  min-height: 44px;
+  border-bottom: 1px solid #eee;
+}
 
-    .result-card.best {
-      border: 2px solid #f5b700;
-    }
+.result-row:last-child {
+  border-bottom: none;
+}
 
-    .best-badge {
-      padding: 8px 10px;
-      background: #fff8dc;
-      color: #9a7000;
-      font-weight: bold;
-      font-size: 14px;
-      text-align: center;
-    }
+.result-label {
+  width: 32%;
+  padding: 10px 8px;
+  background: #f1f5f9;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: bold;
+}
 
-    .result-row {
-      display: flex;
-      width: 100%;
-      min-height: 44px;
-      border-bottom: 1px solid #eeeeee;
-    }
+.result-value {
+  width: 68%;
+  padding: 10px 8px;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  word-break: break-word;
+}
 
-    .result-row:last-child {
-      border-bottom: none;
-    }
+.score {
+  font-size: 18px;
+  font-weight: bold;
+}
 
-    .result-label {
-      width: 32%;
-      padding: 10px 8px;
-      background: #f1f5f9;
-      font-weight: bold;
-      font-size: 14px;
-      display: flex;
-      align-items: center;
-    }
+.message,
+.loading,
+.error {
+  padding: 18px 8px;
+  text-align: center;
+  font-size: 15px;
+}
 
-    .result-value {
-      width: 68%;
-      padding: 10px 8px;
-      font-size: 14px;
-      display: flex;
-      align-items: center;
-      word-break: break-word;
-    }
+.message {
+  color: #777;
+}
 
-    .score {
-      font-size: 18px;
-      font-weight: bold;
-    }
+.loading {
+  color: #1976d2;
+}
 
-    .message {
-      text-align: center;
-      padding: 18px 10px;
-      color: #777777;
-      font-size: 15px;
-    }
+.error {
+  color: #d32f2f;
+}
 
-    .loading {
-      text-align: center;
-      padding: 18px 10px;
-      color: #1976d2;
-      font-size: 15px;
-    }
+@media (min-width: 700px) {
 
-    .error {
-      text-align: center;
-      padding: 18px 10px;
-      color: #d32f2f;
-      font-size: 15px;
-    }
+  .container {
+    margin: 30px auto;
+    padding: 30px;
+  }
 
-    /* ================================
-       電腦版
-       ================================ */
+  h1 {
+    font-size: 30px;
+  }
 
-    @media (min-width: 700px) {
+}
 
-      body {
-        padding: 20px;
-      }
-
-      .container {
-        margin: 30px auto;
-        padding: 30px;
-      }
-
-      h1 {
-        font-size: 30px;
-      }
-
-      .result-row {
-        min-height: 48px;
-      }
-
-      .result-label {
-        width: 25%;
-        padding: 12px;
-        font-size: 15px;
-      }
-
-      .result-value {
-        width: 75%;
-        padding: 12px;
-        font-size: 15px;
-      }
-
-    }
-
-  </style>
+</style>
 
 </head>
 
 <body>
 
-  <div class="container">
+<div class="container">
 
-```
-<h1>
-  COLOR成績查詢系統
-</h1>
+<h1>COLOR成績查詢系統</h1>
 
-
-<!-- ================================
-     班別
-     ================================ -->
+<!-- 班別 -->
 
 <div class="form-group">
 
-  <label for="classSelect">
-    班別
-  </label>
+<label for="classSelect">
+班別
+</label>
 
-  <select id="classSelect">
+<select id="classSelect">
 
-    <option value="">
-      班別載入中...
-    </option>
+<option value="">
+班別載入中...
+</option>
 
-  </select>
+</select>
 
 </div>
 
-
-<!-- ================================
-     姓名
-     ================================ -->
+<!-- 姓名 -->
 
 <div class="form-group">
 
-  <label for="nameInput">
-    姓名
-  </label>
+<label for="nameInput">
+姓名
+</label>
 
-  <input
-    type="text"
-    id="nameInput"
-    placeholder="請輸入姓名"
-    autocomplete="off"
-  >
+<input
+type="text"
+id="nameInput"
+placeholder="請輸入姓名"
+autocomplete="off"
+
+>
 
 </div>
 
-
-<!-- ================================
-     項目
-     ================================ -->
+<!-- 項目 -->
 
 <div class="form-group">
 
-  <label for="itemSelect">
-    項目
-  </label>
+<label for="itemSelect">
+項目
+</label>
 
-  <select
-    id="itemSelect"
-    disabled
-  >
+<select
+id="itemSelect"
+disabled
 
-    <option value="">
-      請先選擇班別並輸入姓名
-    </option>
+>
 
-  </select>
+<option value="">
+請先選擇班別並輸入姓名
+</option>
+
+</select>
 
 </div>
 
-
-<!-- ================================
-     查詢
-     ================================ -->
+<!-- 查詢 -->
 
 <button id="searchButton">
-  查詢成績
+查詢成績
 </button>
 
-
-<!-- ================================
-     結果
-     ================================ -->
+<!-- 結果 -->
 
 <div class="result">
 
-  <div class="result-title">
-    查詢結果
-  </div>
+<div class="result-title">
+查詢結果
+</div>
 
-  <div id="resultArea">
+<div id="resultArea">
 
-    <div class="message">
-      請選擇班別、輸入姓名並選擇項目
-    </div>
-
-  </div>
+<div class="message">
+請選擇班別、輸入姓名並選擇項目
+</div>
 
 </div>
-```
 
-  </div>
+</div>
 
-  <script>
+</div>
 
-    // ==================================================
-    // Google Apps Script 網址
-    // ==================================================
-
-    const API_URL =
-      "https://script.google.com/macros/s/AKfycbxH5g5d8vlbMjs6XxHK4JN634Kg7LuP7Bnmg-qjRnKKYVNNGDaz1s2a0gJE1RVY3uQ5/exec";
+<script>
 
 
-    // ==================================================
-    // 網頁元件
-    // ==================================================
+// ==================================================
+// Apps Script 網址
+// ==================================================
 
-    const classSelect =
-      document.getElementById(
-        "classSelect"
+const API_URL =
+"https://script.google.com/macros/s/AKfycbxH5g5d8vlbMjs6XxHK4JN634Kg7LuP7Bnmg-qjRnKKYVNNGDaz1s2a0gJE1RVY3uQ5/exec";
+
+
+// ==================================================
+// 取得網頁元件
+// ==================================================
+
+const classSelect =
+document.getElementById("classSelect");
+
+const nameInput =
+document.getElementById("nameInput");
+
+const itemSelect =
+document.getElementById("itemSelect");
+
+const searchButton =
+document.getElementById("searchButton");
+
+const resultArea =
+document.getElementById("resultArea");
+
+
+// ==================================================
+// 網頁載入
+// ==================================================
+
+window.addEventListener(
+"load",
+function() {
+
+  loadClasses();
+
+}
+);
+
+
+// ==================================================
+// 載入班別
+// ==================================================
+
+function loadClasses() {
+
+  classSelect.innerHTML =
+  '<option value="">班別載入中...</option>';
+
+
+  fetch(
+    API_URL + "?action=classes"
+  )
+
+  .then(function(response) {
+
+    if (!response.ok) {
+      throw new Error(
+        "HTTP " + response.status
       );
+    }
 
-    const nameInput =
-      document.getElementById(
-        "nameInput"
-      );
+    return response.json();
 
-    const itemSelect =
-      document.getElementById(
-        "itemSelect"
-      );
+  })
 
-    const searchButton =
-      document.getElementById(
-        "searchButton"
-      );
+  .then(function(data) {
 
-    const resultArea =
-      document.getElementById(
-        "resultArea"
-      );
+    classSelect.innerHTML =
+    '<option value="">請選擇班別</option>';
 
 
-    // ==================================================
-    // 網頁載入
-    // ==================================================
+    if (
+      !Array.isArray(data)
+    ) {
 
-    window.addEventListener(
-      "load",
-      function() {
-
-        loadClasses();
-
-      }
-    );
-
-
-    // ==================================================
-    // 載入班別
-    // ==================================================
-
-    function loadClasses() {
-
-      classSelect.innerHTML =
-        '<option value="">班別載入中...</option>';
-
-
-      fetch(
-        API_URL +
-        "?action=classes"
-      )
-
-      .then(
-        function(response) {
-
-          if (!response.ok) {
-
-            throw new Error(
-              "HTTP " +
-              response.status
-            );
-
-          }
-
-          return response.json();
-
-        }
-      )
-
-      .then(
-        function(data) {
-
-          console.log(
-            "班別資料：",
-            data
-          );
-
-
-          if (
-            !Array.isArray(data)
-          ) {
-
-            throw new Error(
-              "班別資料格式錯誤"
-            );
-
-          }
-
-
-          classSelect.innerHTML =
-            '<option value="">請選擇班別</option>';
-
-
-          data.forEach(
-            function(className) {
-
-              const option =
-                document.createElement(
-                  "option"
-                );
-
-
-              option.value =
-                className;
-
-
-              option.textContent =
-                className;
-
-
-              classSelect.appendChild(
-                option
-              );
-
-            }
-          );
-
-        }
-      )
-
-      .catch(
-        function(error) {
-
-          console.error(
-            "班別載入失敗：",
-            error
-          );
-
-
-          classSelect.innerHTML =
-            '<option value="">班別載入失敗</option>';
-
-
-          resultArea.innerHTML =
-            '<div class="error">班別載入失敗，請確認 Apps Script。</div>';
-
-        }
+      throw new Error(
+        "班別資料格式錯誤"
       );
 
     }
 
 
-    // ==================================================
-    // 選擇班別
-    // ==================================================
+    data.forEach(
+      function(className) {
 
-    classSelect.addEventListener(
-      "change",
-      function() {
+        const option =
+        document.createElement("option");
 
-        clearItems();
+        option.value =
+        className;
 
-        nameInput.value = "";
+        option.textContent =
+        className;
 
-        resultArea.innerHTML =
-          '<div class="message">請輸入姓名</div>';
-
-      }
-    );
-
-
-    // ==================================================
-    // 姓名按 Enter
-    // ==================================================
-
-    nameInput.addEventListener(
-      "keydown",
-      function(event) {
-
-        if (
-          event.key === "Enter"
-        ) {
-
-          loadItems();
-
-        }
+        classSelect.appendChild(
+        option
+        );
 
       }
     );
 
+  })
 
-    // ==================================================
-    // 姓名離開輸入框
-    // ==================================================
+  .catch(function(error) {
 
-    nameInput.addEventListener(
-      "blur",
-      function() {
-
-        loadItems();
-
-      }
+    console.error(
+      "班別載入失敗：",
+      error
     );
 
+    classSelect.innerHTML =
+    '<option value="">班別載入失敗</option>';
 
-    // ==================================================
-    // 清除項目
-    // ==================================================
+  });
 
-    function clearItems() {
+}
+
+
+// ==================================================
+// 班別改變
+// ==================================================
+
+classSelect.addEventListener(
+"change",
+function() {
+
+  itemSelect.disabled = true;
+
+  itemSelect.innerHTML =
+  '<option value="">請先輸入姓名</option>';
+
+  resultArea.innerHTML =
+  '<div class="message">請輸入姓名</div>';
+
+}
+);
+
+
+// ==================================================
+// 姓名輸入
+// ==================================================
+
+nameInput.addEventListener(
+"input",
+function() {
+
+  loadItems();
+
+}
+);
+
+
+// ==================================================
+// 取得項目
+// ==================================================
+
+function loadItems() {
+
+  const className =
+  classSelect.value.trim();
+
+  const name =
+  nameInput.value.trim();
+
+
+  if (
+    className === "" ||
+    name === ""
+  ) {
+
+    itemSelect.disabled = true;
+
+    itemSelect.innerHTML =
+    '<option value="">請先選擇班別並輸入姓名</option>';
+
+    return;
+
+  }
+
+
+  itemSelect.disabled = true;
+
+  itemSelect.innerHTML =
+  '<option value="">項目載入中...</option>';
+
+
+  const url =
+    API_URL +
+    "?action=items" +
+    "&name=" +
+    encodeURIComponent(name) +
+    "&className=" +
+    encodeURIComponent(className);
+
+
+  fetch(url)
+
+  .then(function(response) {
+
+    if (!response.ok) {
+
+      throw new Error(
+        "HTTP " + response.status
+      );
+
+    }
+
+    return response.json();
+
+  })
+
+  .then(function(data) {
+
+    itemSelect.innerHTML =
+    '<option value="">請選擇項目</option>';
+
+
+    if (
+      !Array.isArray(data) ||
+      data.length === 0
+    ) {
 
       itemSelect.innerHTML =
-        '<option value="">請先選擇班別並輸入姓名</option>';
+      '<option value="">查無此學生或項目</option>';
 
+      itemSelect.disabled = true;
 
-      itemSelect.disabled =
-        true;
+      return;
 
     }
 
 
-    // ==================================================
-    // 取得項目
-    // ==================================================
+    data.forEach(
+      function(item) {
 
-    function loadItems() {
+        const option =
+        document.createElement("option");
 
-      const className =
-        classSelect.value.trim();
+        option.value =
+        item;
 
+        option.textContent =
+        item;
 
-      const name =
-        nameInput.value.trim();
-
-
-      if (
-        className === ""
-      ) {
-
-        clearItems();
-
-        return;
-
-      }
-
-
-      if (
-        name === ""
-      ) {
-
-        clearItems();
-
-        return;
-
-      }
-
-
-      itemSelect.disabled =
-        true;
-
-
-      itemSelect.innerHTML =
-        '<option value="">項目載入中...</option>';
-
-
-      const url =
-        API_URL +
-        "?action=items" +
-        "&name=" +
-        encodeURIComponent(
-          name
-        ) +
-        "&className=" +
-        encodeURIComponent(
-          className
+        itemSelect.appendChild(
+        option
         );
-
-
-      fetch(url)
-
-        .then(
-          function(response) {
-
-            if (!response.ok) {
-
-              throw new Error(
-                "HTTP " +
-                response.status
-              );
-
-            }
-
-            return response.json();
-
-          }
-        )
-
-        .then(
-          function(data) {
-
-            console.log(
-              "項目資料：",
-              data
-            );
-
-
-            if (
-              !Array.isArray(data)
-            ) {
-
-              throw new Error(
-                "項目資料格式錯誤"
-              );
-
-            }
-
-
-            itemSelect.innerHTML =
-              '<option value="">請選擇項目</option>';
-
-
-            if (
-              data.length === 0
-            ) {
-
-              itemSelect.innerHTML =
-                '<option value="">查無此學生</option>';
-
-
-              itemSelect.disabled =
-                true;
-
-
-              return;
-
-            }
-
-
-            data.forEach(
-              function(item) {
-
-                const option =
-                  document.createElement(
-                    "option"
-                  );
-
-
-                option.value =
-                  item;
-
-
-                option.textContent =
-                  item;
-
-
-                itemSelect.appendChild(
-                  option
-                );
-
-              }
-            );
-
-
-            itemSelect.disabled =
-              false;
-
-          }
-        )
-
-        .catch(
-          function(error) {
-
-            console.error(
-              "項目載入失敗：",
-              error
-            );
-
-
-            itemSelect.innerHTML =
-              '<option value="">項目載入失敗</option>';
-
-
-            itemSelect.disabled =
-              true;
-
-          }
-        );
-
-    }
-
-
-    // ==================================================
-    // 查詢按鈕
-    // ==================================================
-
-    searchButton.addEventListener(
-      "click",
-      function() {
-
-        searchScore();
 
       }
     );
 
 
-    // ==================================================
-    // 查詢成績
-    // ==================================================
+    itemSelect.disabled = false;
 
-    function searchScore() {
+  })
 
-      const className =
-        classSelect.value.trim();
+  .catch(function(error) {
 
+    console.error(
+      "項目載入失敗：",
+      error
+    );
 
-      const name =
-        nameInput.value.trim();
+    itemSelect.innerHTML =
+    '<option value="">項目載入失敗</option>';
 
+    itemSelect.disabled = true;
 
-      const item =
-        itemSelect.value.trim();
+  });
 
-
-      if (
-        className === ""
-      ) {
-
-        alert(
-          "請選擇班別"
-        );
-
-        return;
-
-      }
+}
 
 
-      if (
-        name === ""
-      ) {
+// ==================================================
+// 查詢
+// ==================================================
 
-        alert(
-          "請輸入姓名"
-        );
+searchButton.addEventListener(
+"click",
+function() {
 
-        nameInput.focus();
+  searchScore();
 
-        return;
-
-      }
-
-
-      if (
-        item === ""
-      ) {
-
-        alert(
-          "請選擇項目"
-        );
-
-        return;
-
-      }
+}
+);
 
 
-      resultArea.innerHTML =
-        '<div class="loading">查詢中...</div>';
+function searchScore() {
+
+  const className =
+  classSelect.value.trim();
+
+  const name =
+  nameInput.value.trim();
+
+  const item =
+  itemSelect.value.trim();
 
 
-      searchButton.disabled =
-        true;
+  if (className === "") {
+
+    alert("請選擇班別");
+    return;
+
+  }
 
 
-      const url =
-        API_URL +
-        "?name=" +
-        encodeURIComponent(
-          name
-        ) +
-        "&className=" +
-        encodeURIComponent(
-          className
-        ) +
-        "&item=" +
-        encodeURIComponent(
-          item
-        );
+  if (name === "") {
+
+    alert("請輸入姓名");
+    nameInput.focus();
+    return;
+
+  }
 
 
-      fetch(url)
+  if (item === "") {
 
-        .then(
-          function(response) {
+    alert("請選擇項目");
+    return;
 
-            if (!response.ok) {
-
-              throw new Error(
-                "HTTP " +
-                response.status
-              );
-
-            }
-
-            return response.json();
-
-          }
-        )
-
-        .then(
-          function(data) {
-
-            console.log(
-              "查詢結果：",
-              data
-            );
+  }
 
 
-            displayResults(
-              data
-            );
+  resultArea.innerHTML =
+  '<div class="loading">查詢中...</div>';
 
-          }
-        )
-
-        .catch(
-          function(error) {
-
-            console.error(
-              "查詢失敗：",
-              error
-            );
+  searchButton.disabled = true;
 
 
-            resultArea.innerHTML =
-              '<div class="error">查詢失敗，請稍後再試。</div>';
+  const url =
+    API_URL +
+    "?name=" +
+    encodeURIComponent(name) +
+    "&className=" +
+    encodeURIComponent(className) +
+    "&item=" +
+    encodeURIComponent(item);
 
-          }
-        )
 
-        .finally(
-          function() {
+  fetch(url)
 
-            searchButton.disabled =
-              false;
+  .then(function(response) {
 
-          }
-        );
+    if (!response.ok) {
+
+      throw new Error(
+        "HTTP " + response.status
+      );
 
     }
 
+    return response.json();
 
-    // ==================================================
-    // 顯示查詢結果
-    // ==================================================
+  })
 
-    function displayResults(data) {
+  .then(function(data) {
 
-      if (
-        !Array.isArray(data) ||
-        data.length === 0
-      ) {
+    displayResults(data);
 
-        resultArea.innerHTML =
-          '<div class="message">查無此項目的測驗成績</div>';
+  })
 
-        return;
+  .catch(function(error) {
+
+    console.error(
+      "查詢失敗：",
+      error
+    );
+
+    resultArea.innerHTML =
+    '<div class="error">查詢失敗，請稍後再試。</div>';
+
+  })
+
+  .finally(function() {
+
+    searchButton.disabled = false;
+
+  });
+
+}
+
+
+// ==================================================
+// 顯示結果
+// ==================================================
+
+function displayResults(data) {
+
+  if (
+    !Array.isArray(data) ||
+    data.length === 0
+  ) {
+
+    resultArea.innerHTML =
+    '<div class="message">查無此項目的測驗成績</div>';
+
+    return;
+
+  }
+
+
+  const results =
+  data.slice();
+
+
+  // 日期由近到遠
+
+  results.sort(
+    function(a, b) {
+
+      return (
+        parseDate(b.testDate) -
+        parseDate(a.testDate)
+      );
+
+    }
+  );
+
+
+  // 找最佳成績
+
+  const bestIndexes =
+  findBestIndexes(results);
+
+
+  let html = "";
+
+
+  results.forEach(
+    function(row, index) {
+
+      const isBest =
+      bestIndexes.indexOf(index) !== -1;
+
+
+      html +=
+      '<div class="result-card ' +
+      (isBest ? "best" : "") +
+      '">';
+
+
+      if (isBest) {
+
+        html +=
+        '<div class="best-badge">' +
+        '🏆 最佳成績' +
+        '</div>';
 
       }
 
 
-      const results =
-        data.slice();
-
-
-      // ==================================================
-      // 日期由近到遠
-      // ==================================================
-
-      results.sort(
-        function(a, b) {
-
-          return (
-            parseDate(
-              b.testDate
-            ) -
-            parseDate(
-              a.testDate
-            )
-          );
-
-        }
+      html +=
+      resultRow(
+        "測驗日期",
+        formatDateOnly(row.testDate)
       );
 
 
-      // ==================================================
-      // 找最佳成績
-      // 只有 2 筆以上才會判斷
-      // ==================================================
-
-      const bestIndexes =
-        findBestIndexes(
-          results
-        );
-
-
-      let html = "";
-
-
-      results.forEach(
-        function(row, index) {
-
-          const isBest =
-            bestIndexes.indexOf(
-              index
-            ) !== -1;
-
-
-          html +=
-            '<div class="result-card ' +
-            (
-              isBest
-                ? "best"
-                : ""
-            ) +
-            '">';
-
-
-          // ==================================================
-          // 最佳成績標示
-          // ==================================================
-
-          if (
-            isBest
-          ) {
-
-            html +=
-              '<div class="best-badge">' +
-              '🏆 最佳成績' +
-              '</div>';
-
-          }
-
-
-          // ==================================================
-          // 測驗日期
-          // ==================================================
-
-          html +=
-            '<div class="result-row">';
-
-          html +=
-            '<div class="result-label">' +
-            '測驗日期' +
-            '</div>';
-
-          html +=
-            '<div class="result-value">' +
-            escapeHTML(
-              formatDateOnly(
-                row.testDate
-              )
-            ) +
-            '</div>';
-
-          html +=
-            '</div>';
-
-
-          // ==================================================
-          // 教練
-          // ==================================================
-
-          html +=
-            '<div class="result-row">';
-
-          html +=
-            '<div class="result-label">' +
-            '教練' +
-            '</div>';
-
-          html +=
-            '<div class="result-value">' +
-            escapeHTML(
-              row.coach || ""
-            ) +
-            '</div>';
-
-          html +=
-            '</div>';
-
-
-          // ==================================================
-          // 項目
-          // ==================================================
-
-          html +=
-            '<div class="result-row">';
-
-          html +=
-            '<div class="result-label">' +
-            '項目' +
-            '</div>';
-
-          html +=
-            '<div class="result-value">' +
-            escapeHTML(
-              row.item || ""
-            ) +
-            '</div>';
-
-          html +=
-            '</div>';
-
-
-          // ==================================================
-          // 成績
-          // ==================================================
-
-          html +=
-            '<div class="result-row">';
-
-          html +=
-            '<div class="result-label">' +
-            '成績' +
-            '</div>';
-
-          html +=
-            '<div class="result-value score">' +
-            escapeHTML(
-              String(
-                row.score ?? ""
-              )
-            ) +
-            '</div>';
-
-          html +=
-            '</div>';
-
-
-          html +=
-            '</div>';
-
-        }
+      html +=
+      resultRow(
+        "教練",
+        row.coach || ""
       );
 
 
-      resultArea.innerHTML =
-        html;
-
-    }
-
-
-    // ==================================================
-    // 找出最佳成績
-    //
-    // 重要：
-    // 少於 2 筆 → 不顯示最佳成績
-    // 2 筆以上 → 才開始比較
-    // ==================================================
-
-    function findBestIndexes(results) {
-
-      let bestIndexes = [];
-
-
-      // ==================================================
-      // 少於 2 筆，不顯示最佳成績
-      // ==================================================
-
-      if (
-        results.length < 2
-      ) {
-
-        return bestIndexes;
-
-      }
-
-
-      let bestValue = null;
-
-
-      // ==================================================
-      // 判斷是否為時間類項目
-      // ==================================================
-
-      const itemName =
-        String(
-          results[0].item || ""
-        ).toLowerCase();
-
-
-      const isTimeEvent =
-        isTimeBasedEvent(
-          itemName
-        );
-
-
-      // ==================================================
-      // 開始比較
-      // ==================================================
-
-      results.forEach(
-        function(row, index) {
-
-          const value =
-            parseScore(
-              row.score
-            );
-
-
-          if (
-            value === null
-          ) {
-
-            return;
-
-          }
-
-
-          // 第一個有效成績
-
-          if (
-            bestValue === null
-          ) {
-
-            bestValue =
-              value;
-
-            bestIndexes = [
-              index
-            ];
-
-            return;
-
-          }
-
-
-          // ==================================================
-          // 時間類
-          // 越短越好
-          // ==================================================
-
-          if (
-            isTimeEvent
-          ) {
-
-            if (
-              value < bestValue
-            ) {
-
-              bestValue =
-                value;
-
-              bestIndexes = [
-                index
-              ];
-
-            }
-            else if (
-              value === bestValue
-            ) {
-
-              bestIndexes.push(
-                index
-              );
-
-            }
-
-          }
-
-
-          // ==================================================
-          // 一般數值
-          // 越高越好
-          // ==================================================
-
-          else {
-
-            if (
-              value > bestValue
-            ) {
-
-              bestValue =
-                value;
-
-              bestIndexes = [
-                index
-              ];
-
-            }
-            else if (
-              value === bestValue
-            ) {
-
-              bestIndexes.push(
-                index
-              );
-
-            }
-
-          }
-
-        }
+      html +=
+      resultRow(
+        "項目",
+        row.item || ""
       );
 
 
-      return bestIndexes;
+      html +=
+      '<div class="result-row">' +
+
+      '<div class="result-label">' +
+      '成績' +
+      '</div>' +
+
+      '<div class="result-value score">' +
+      escapeHTML(
+        String(row.score ?? "")
+      ) +
+      '</div>' +
+
+      '</div>';
+
+
+      html +=
+      '</div>';
 
     }
+  );
 
 
-    // ==================================================
-    // 判斷時間類項目
-    // ==================================================
+  resultArea.innerHTML =
+  html;
 
-    function isTimeBasedEvent(item) {
-
-      const timeKeywords = [
-
-        "50m",
-        "60m",
-        "80m",
-        "100m",
-        "150m",
-        "200m",
-        "300m",
-        "400m",
-        "500m",
-        "600m",
-        "800m",
-        "1000m",
-        "1500m",
-        "2000m",
-        "3000m",
-        "5000m",
-        "10000m",
-
-        "50公尺",
-        "60公尺",
-        "80公尺",
-        "100公尺",
-        "150公尺",
-        "200公尺",
-        "300公尺",
-        "400公尺",
-        "500公尺",
-        "600公尺",
-        "800公尺",
-        "1000公尺",
-        "1500公尺",
-        "2000公尺",
-
-        "秒",
-        "計時",
-        "時間",
-        "time"
-
-      ];
+}
 
 
-      for (
-        let i = 0;
-        i < timeKeywords.length;
-        i++
-      ) {
+// ==================================================
+// 產生成績欄位
+// ==================================================
 
-        if (
-          item.includes(
-            timeKeywords[i]
-          )
-        ) {
+function resultRow(label, value) {
 
-          return true;
+  return (
 
-        }
+    '<div class="result-row">' +
 
-      }
+    '<div class="result-label">' +
+    escapeHTML(label) +
+    '</div>' +
 
+    '<div class="result-value">' +
+    escapeHTML(value) +
+    '</div>' +
 
-      return false;
+    '</div>'
 
-    }
+  );
 
-
-    // ==================================================
-    // 成績轉成可比較的數值
-    //
-    // 支援：
-    //
-    // 12
-    // 12.35
-    // 1:25
-    // 1:25.36
-    // 10:15
-    // 10:15.27
-    //
-    // 例如：
-    //
-    // 1:25.36
-    // =
-    // 1 × 60 + 25.36
-    // =
-    // 85.36 秒
-    // ==================================================
-
-    function parseScore(score) {
-
-      if (
-        score === null ||
-        score === undefined
-      ) {
-
-        return null;
-
-      }
+}
 
 
-      const text =
-        String(
-          score
-        ).trim();
+// ==================================================
+// 最佳成績
+//
+// 少於 2 筆：不標最佳
+//
+// 2 筆以上：
+// 時間項目 → 越短越好
+// 一般分數 → 越高越好
+// ==================================================
+
+function findBestIndexes(results) {
+
+  if (
+    results.length < 2
+  ) {
+
+    return [];
+
+  }
 
 
-      if (
-        text === ""
-      ) {
-
-        return null;
-
-      }
+  const itemName =
+  String(
+    results[0].item || ""
+  ).toLowerCase();
 
 
-      // ==================================================
-      // 分:秒格式
-      // ==================================================
-
-      if (
-        text.includes(":")
-      ) {
-
-        const parts =
-          text.split(":");
+  const isTime =
+  isTimeBasedEvent(itemName);
 
 
-        if (
-          parts.length === 2
-        ) {
+  let bestValue = null;
 
-          const minutes =
-            Number(
-              parts[0].trim()
-            );
+  let bestIndexes = [];
 
 
-          const seconds =
-            Number(
-              parts[1]
-                .trim()
-                .replace(
-                  /[^0-9.]/g,
-                  ""
-                )
-            );
-
-
-          if (
-            !isNaN(minutes) &&
-            !isNaN(seconds)
-          ) {
-
-            return (
-              minutes * 60 +
-              seconds
-            );
-
-          }
-
-        }
-
-      }
-
-
-      // ==================================================
-      // 一般秒數
-      //
-      // 例如：
-      // 12
-      // 12.35
-      // 19.81秒
-      // ==================================================
-
-      const match =
-        text.match(
-          /-?\d+(?:\.\d+)?/
-        );
-
-
-      if (
-        !match
-      ) {
-
-        return null;
-
-      }
-
+  results.forEach(
+    function(row, index) {
 
       const value =
-        Number(
-          match[0]
-        );
+      parseScore(row.score);
 
 
-      if (
-        isNaN(value)
-      ) {
+      if (value === null) {
+        return;
+      }
 
-        return null;
+
+      if (bestValue === null) {
+
+        bestValue = value;
+
+        bestIndexes = [index];
+
+        return;
 
       }
 
 
-      return value;
+      if (isTime) {
+
+        if (value < bestValue) {
+
+          bestValue = value;
+
+          bestIndexes = [index];
+
+        }
+        else if (
+          value === bestValue
+        ) {
+
+          bestIndexes.push(index);
+
+        }
+
+      }
+      else {
+
+        if (value > bestValue) {
+
+          bestValue = value;
+
+          bestIndexes = [index];
+
+        }
+        else if (
+          value === bestValue
+        ) {
+
+          bestIndexes.push(index);
+
+        }
+
+      }
+
+    }
+  );
+
+
+  return bestIndexes;
+
+}
+
+
+// ==================================================
+// 判斷時間項目
+// ==================================================
+
+function isTimeBasedEvent(item) {
+
+  const keywords = [
+
+    "50m",
+    "60m",
+    "80m",
+    "100m",
+    "150m",
+    "200m",
+    "300m",
+    "400m",
+    "500m",
+    "600m",
+    "800m",
+    "1000m",
+    "1500m",
+    "2000m",
+    "3000m",
+
+    "50公尺",
+    "60公尺",
+    "80公尺",
+    "100公尺",
+    "150公尺",
+    "200公尺",
+    "300公尺",
+    "400公尺",
+    "500公尺",
+    "600公尺",
+    "800公尺",
+    "1000公尺",
+
+    "秒",
+    "計時",
+    "時間",
+    "time"
+
+  ];
+
+
+  for (
+    let i = 0;
+    i < keywords.length;
+    i++
+  ) {
+
+    if (
+      item.includes(
+        keywords[i]
+      )
+    ) {
+
+      return true;
 
     }
 
-
-    // ==================================================
-    // 日期轉成時間戳
-    // ==================================================
-
-    function parseDate(value) {
-
-      if (
-        !value
-      ) {
-
-        return 0;
-
-      }
+  }
 
 
-      const text =
-        String(
-          value
-        ).trim();
+  return false;
+
+}
 
 
-      const match =
-        text.match(
-          /^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})/
-        );
+// ==================================================
+// 成績轉數字
+//
+// 支援：
+//
+// 19.81
+// 19.81秒
+// 1:25
+// 1:25.36
+// 10:15
+// 10:15.27
+// ==================================================
+
+function parseScore(score) {
+
+  if (
+    score === null ||
+    score === undefined
+  ) {
+
+    return null;
+
+  }
 
 
-      if (
-        match
-      ) {
-
-        return new Date(
-          Number(
-            match[1]
-          ),
-          Number(
-            match[2]
-          ) - 1,
-          Number(
-            match[3]
-          )
-        ).getTime();
-
-      }
+  const text =
+  String(score).trim();
 
 
-      const date =
-        new Date(
-          text
-        );
+  if (text === "") {
+
+    return null;
+
+  }
 
 
-      if (
-        !isNaN(
-          date.getTime()
+  // 分:秒
+
+  if (
+    text.indexOf(":") !== -1
+  ) {
+
+    const parts =
+    text.split(":");
+
+
+    if (
+      parts.length === 2
+    ) {
+
+      const minutes =
+      Number(parts[0].trim());
+
+
+      const seconds =
+      Number(
+        parts[1]
+        .trim()
+        .replace(
+          /[^0-9.]/g,
+          ""
         )
-      ) {
-
-        return date.getTime();
-
-      }
-
-
-      return 0;
-
-    }
-
-
-    // ==================================================
-    // 日期只顯示 年/月/日
-    // ==================================================
-
-    function formatDateOnly(value) {
-
-      if (
-        !value
-      ) {
-
-        return "";
-
-      }
-
-
-      const text =
-        String(
-          value
-        ).trim();
-
-
-      const match =
-        text.match(
-          /^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})/
-        );
-
-
-      if (
-        match
-      ) {
-
-        return (
-          match[1] +
-          "/" +
-          ("0" + match[2])
-            .slice(-2) +
-          "/" +
-          ("0" + match[3])
-            .slice(-2)
-        );
-
-      }
-
-
-      const date =
-        new Date(
-          text
-        );
-
-
-      if (
-        !isNaN(
-          date.getTime()
-        )
-      ) {
-
-        const year =
-          date.getFullYear();
-
-
-        const month =
-          String(
-            date.getMonth() + 1
-          ).padStart(
-            2,
-            "0"
-          );
-
-
-        const day =
-          String(
-            date.getDate()
-          ).padStart(
-            2,
-            "0"
-          );
-
-
-        return (
-          year +
-          "/" +
-          month +
-          "/" +
-          day
-        );
-
-      }
-
-
-      return text;
-
-    }
-
-
-    // ==================================================
-    // HTML 安全處理
-    // ==================================================
-
-    function escapeHTML(value) {
-
-      return String(
-        value
-      )
-
-      .replace(
-        /&/g,
-        "&amp;"
-      )
-
-      .replace(
-        /</g,
-        "&lt;"
-      )
-
-      .replace(
-        />/g,
-        "&gt;"
-      )
-
-      .replace(
-        /"/g,
-        "&quot;"
-      )
-
-      .replace(
-        /'/g,
-        "&#039;"
       );
 
+
+      if (
+        !isNaN(minutes) &&
+        !isNaN(seconds)
+      ) {
+
+        return (
+          minutes * 60 +
+          seconds
+        );
+
+      }
+
     }
 
-  </script>
+  }
+
+
+  // 一般數字
+
+  const match =
+  text.match(
+    /-?\d+(?:\.\d+)?/
+  );
+
+
+  if (!match) {
+
+    return null;
+
+  }
+
+
+  const value =
+  Number(match[0]);
+
+
+  if (isNaN(value)) {
+
+    return null;
+
+  }
+
+
+  return value;
+
+}
+
+
+// ==================================================
+// 日期
+// ==================================================
+
+function parseDate(value) {
+
+  if (!value) {
+
+    return 0;
+
+  }
+
+
+  const text =
+  String(value).trim();
+
+
+  const match =
+  text.match(
+    /^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})/
+  );
+
+
+  if (match) {
+
+    return new Date(
+      Number(match[1]),
+      Number(match[2]) - 1,
+      Number(match[3])
+    ).getTime();
+
+  }
+
+
+  const date =
+  new Date(text);
+
+
+  if (
+    !isNaN(
+      date.getTime()
+    )
+  ) {
+
+    return date.getTime();
+
+  }
+
+
+  return 0;
+
+}
+
+
+// ==================================================
+// 日期只顯示 YYYY/MM/DD
+// ==================================================
+
+function formatDateOnly(value) {
+
+  if (!value) {
+
+    return "";
+
+  }
+
+
+  const text =
+  String(value).trim();
+
+
+  const match =
+  text.match(
+    /^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})/
+  );
+
+
+  if (match) {
+
+    return (
+      match[1] +
+      "/" +
+      String(
+        match[2]
+      ).padStart(2, "0") +
+      "/" +
+      String(
+        match[3]
+      ).padStart(2, "0")
+    );
+
+  }
+
+
+  return text;
+
+}
+
+
+// ==================================================
+// 防止 HTML 注入
+// ==================================================
+
+function escapeHTML(value) {
+
+  return String(value)
+
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+
+    .replace(
+      /</g,
+      "&lt;"
+    )
+
+    .replace(
+      />/g,
+      "&gt;"
+    )
+
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
+}
+
+</script>
 
 </body>
 
