@@ -113,11 +113,9 @@ content="width=device-width, initial-scale=1.0"
       margin-bottom: 12px;
     }
 
-    /*
-    ==========================================
-    手機版結果卡片
-    ==========================================
-    */
+    /* ================================
+       成績卡片
+       ================================ */
 
     .result-card {
       width: 100%;
@@ -126,6 +124,19 @@ content="width=device-width, initial-scale=1.0"
       overflow: hidden;
       background: #ffffff;
       margin-bottom: 12px;
+    }
+
+    .result-card.best {
+      border: 2px solid #f5b700;
+    }
+
+    .best-badge {
+      padding: 8px 10px;
+      background: #fff8dc;
+      color: #9a7000;
+      font-weight: bold;
+      font-size: 14px;
+      text-align: center;
     }
 
     .result-row {
@@ -184,11 +195,9 @@ content="width=device-width, initial-scale=1.0"
       font-size: 15px;
     }
 
-    /*
-    ==========================================
-    電腦版
-    ==========================================
-    */
+    /* ================================
+       電腦版
+       ================================ */
 
     @media (min-width: 700px) {
 
@@ -237,9 +246,9 @@ content="width=device-width, initial-scale=1.0"
 </h1>
 
 
-<!-- ======================================
+<!-- ================================
      班別
-======================================= -->
+     ================================ -->
 
 <div class="form-group">
 
@@ -258,9 +267,9 @@ content="width=device-width, initial-scale=1.0"
 </div>
 
 
-<!-- ======================================
+<!-- ================================
      姓名
-======================================= -->
+     ================================ -->
 
 <div class="form-group">
 
@@ -278,9 +287,9 @@ content="width=device-width, initial-scale=1.0"
 </div>
 
 
-<!-- ======================================
+<!-- ================================
      項目
-======================================= -->
+     ================================ -->
 
 <div class="form-group">
 
@@ -302,18 +311,18 @@ content="width=device-width, initial-scale=1.0"
 </div>
 
 
-<!-- ======================================
+<!-- ================================
      查詢
-======================================= -->
+     ================================ -->
 
 <button id="searchButton">
   查詢成績
 </button>
 
 
-<!-- ======================================
+<!-- ================================
      結果
-======================================= -->
+     ================================ -->
 
 <div class="result">
 
@@ -337,7 +346,7 @@ content="width=device-width, initial-scale=1.0"
   <script>
 
     // ==================================================
-    // Google Apps Script
+    // Google Apps Script 網址
     // ==================================================
 
     const API_URL =
@@ -892,8 +901,7 @@ content="width=device-width, initial-scale=1.0"
 
 
     // ==================================================
-    // 顯示結果
-    // 手機版採用卡片
+    // 顯示查詢結果
     // ==================================================
 
     function displayResults(data) {
@@ -911,23 +919,94 @@ content="width=device-width, initial-scale=1.0"
       }
 
 
+      // ==================================================
+      // 先複製資料
+      // ==================================================
+
+      const results =
+        data.slice();
+
+
+      // ==================================================
+      // 日期由近到遠
+      // 最新日期排最前面
+      // ==================================================
+
+      results.sort(
+        function(a, b) {
+
+          return (
+            parseDate(
+              b.testDate
+            ) -
+            parseDate(
+              a.testDate
+            )
+          );
+
+        }
+      );
+
+
+      // ==================================================
+      // 判斷最佳成績
+      // ==================================================
+
+      const bestIndexes =
+        findBestIndexes(
+          results
+        );
+
+
       let html = "";
 
 
-      data.forEach(
-        function(row) {
+      results.forEach(
+        function(row, index) {
+
+          const isBest =
+            bestIndexes.indexOf(
+              index
+            ) !== -1;
+
 
           html +=
-            '<div class="result-card">';
+            '<div class="result-card ' +
+            (
+              isBest
+                ? "best"
+                : ""
+            ) +
+            '">';
 
 
+          // ==================================================
+          // 最佳成績標示
+          // ==================================================
+
+          if (
+            isBest
+          ) {
+
+            html +=
+              '<div class="best-badge">' +
+              '🏆 最佳成績' +
+              '</div>';
+
+          }
+
+
+          // ==================================================
           // 測驗日期
+          // ==================================================
 
           html +=
             '<div class="result-row">';
 
           html +=
-            '<div class="result-label">測驗日期</div>';
+            '<div class="result-label">' +
+            '測驗日期' +
+            '</div>';
 
           html +=
             '<div class="result-value">' +
@@ -942,13 +1021,17 @@ content="width=device-width, initial-scale=1.0"
             '</div>';
 
 
+          // ==================================================
           // 教練
+          // ==================================================
 
           html +=
             '<div class="result-row">';
 
           html +=
-            '<div class="result-label">教練</div>';
+            '<div class="result-label">' +
+            '教練' +
+            '</div>';
 
           html +=
             '<div class="result-value">' +
@@ -961,13 +1044,17 @@ content="width=device-width, initial-scale=1.0"
             '</div>';
 
 
+          // ==================================================
           // 項目
+          // ==================================================
 
           html +=
             '<div class="result-row">';
 
           html +=
-            '<div class="result-label">項目</div>';
+            '<div class="result-label">' +
+            '項目' +
+            '</div>';
 
           html +=
             '<div class="result-value">' +
@@ -980,13 +1067,17 @@ content="width=device-width, initial-scale=1.0"
             '</div>';
 
 
+          // ==================================================
           // 成績
+          // ==================================================
 
           html +=
             '<div class="result-row">';
 
           html +=
-            '<div class="result-label">成績</div>';
+            '<div class="result-label">' +
+            '成績' +
+            '</div>';
 
           html +=
             '<div class="result-value score">' +
@@ -1015,7 +1106,334 @@ content="width=device-width, initial-scale=1.0"
 
 
     // ==================================================
-    // 日期只保留 年/月/日
+    // 找出最佳成績
+    // ==================================================
+
+    function findBestIndexes(results) {
+
+      let bestIndexes = [];
+
+      let bestValue = null;
+
+
+      // 判斷是不是時間類項目
+
+      const itemName =
+        String(
+          results[0].item || ""
+        ).toLowerCase();
+
+
+      const isTimeEvent =
+        isTimeBasedEvent(
+          itemName
+        );
+
+
+      results.forEach(
+        function(row, index) {
+
+          const value =
+            parseScore(
+              row.score
+            );
+
+
+          if (
+            value === null
+          ) {
+
+            return;
+
+          }
+
+
+          if (
+            bestValue === null
+          ) {
+
+            bestValue =
+              value;
+
+            bestIndexes = [
+              index
+            ];
+
+            return;
+
+          }
+
+
+          if (
+            isTimeEvent
+          ) {
+
+            // 時間越短越好
+
+            if (
+              value < bestValue
+            ) {
+
+              bestValue =
+                value;
+
+              bestIndexes = [
+                index
+              ];
+
+            }
+            else if (
+              value === bestValue
+            ) {
+
+              bestIndexes.push(
+                index
+              );
+
+            }
+
+          }
+          else {
+
+            // 分數／距離越高越好
+
+            if (
+              value > bestValue
+            ) {
+
+              bestValue =
+                value;
+
+              bestIndexes = [
+                index
+              ];
+
+            }
+            else if (
+              value === bestValue
+            ) {
+
+              bestIndexes.push(
+                index
+              );
+
+            }
+
+          }
+
+        }
+      );
+
+
+      return bestIndexes;
+
+    }
+
+
+    // ==================================================
+    // 判斷時間類項目
+    // ==================================================
+
+    function isTimeBasedEvent(item) {
+
+      const timeKeywords = [
+
+        "50m",
+        "60m",
+        "80m",
+        "100m",
+        "150m",
+        "200m",
+        "300m",
+        "400m",
+        "500m",
+        "600m",
+        "800m",
+        "1000m",
+        "1500m",
+        "2000m",
+        "3000m",
+        "5000m",
+        "10000m",
+
+        "50公尺",
+        "60公尺",
+        "80公尺",
+        "100公尺",
+        "150公尺",
+        "200公尺",
+        "300公尺",
+        "400公尺",
+        "500公尺",
+        "600公尺",
+        "800公尺",
+        "1000公尺",
+        "1500公尺",
+        "2000公尺",
+
+        "秒",
+        "計時",
+        "時間",
+        "time"
+
+      ];
+
+
+      for (
+        let i = 0;
+        i < timeKeywords.length;
+        i++
+      ) {
+
+        if (
+          item.includes(
+            timeKeywords[i]
+          )
+        ) {
+
+          return true;
+
+        }
+
+      }
+
+
+      return false;
+
+    }
+
+
+    // ==================================================
+    // 將成績轉成數字
+    // ==================================================
+
+    function parseScore(score) {
+
+      if (
+        score === null ||
+        score === undefined ||
+        score === ""
+      ) {
+
+        return null;
+
+      }
+
+
+      const text =
+        String(
+          score
+        ).trim();
+
+
+      /*
+      支援：
+      19.81
+      20.05
+      19.81秒
+      19.81 s
+      */
+
+
+      const match =
+        text.match(
+          /-?\d+(?:\.\d+)?/
+        );
+
+
+      if (
+        !match
+      ) {
+
+        return null;
+
+      }
+
+
+      const value =
+        Number(
+          match[0]
+        );
+
+
+      if (
+        isNaN(value)
+      ) {
+
+        return null;
+
+      }
+
+
+      return value;
+
+    }
+
+
+    // ==================================================
+    // 日期轉成時間戳
+    // ==================================================
+
+    function parseDate(value) {
+
+      if (
+        !value
+      ) {
+
+        return 0;
+
+      }
+
+
+      const text =
+        String(
+          value
+        ).trim();
+
+
+      const match =
+        text.match(
+          /^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})/
+        );
+
+
+      if (
+        match
+      ) {
+
+        return new Date(
+          Number(match[1]),
+          Number(match[2]) - 1,
+          Number(match[3])
+        ).getTime();
+
+      }
+
+
+      const date =
+        new Date(
+          text
+        );
+
+
+      if (
+        !isNaN(
+          date.getTime()
+        )
+      ) {
+
+        return date.getTime();
+
+      }
+
+
+      return 0;
+
+    }
+
+
+    // ==================================================
+    // 日期只顯示 年/月/日
     // ==================================================
 
     function formatDateOnly(value) {
@@ -1030,12 +1448,12 @@ content="width=device-width, initial-scale=1.0"
 
 
       const text =
-        String(value).trim();
+        String(
+          value
+        ).trim();
 
 
-      // 已經是 YYYY/MM/DD
-
-      let match =
+      const match =
         text.match(
           /^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})/
         );
@@ -1056,10 +1474,10 @@ content="width=device-width, initial-scale=1.0"
       }
 
 
-      // 其他日期格式
-
       const date =
-        new Date(text);
+        new Date(
+          text
+        );
 
 
       if (
@@ -1112,32 +1530,34 @@ content="width=device-width, initial-scale=1.0"
 
     function escapeHTML(value) {
 
-      return String(value)
+      return String(
+        value
+      )
 
-        .replace(
-          /&/g,
-          "&amp;"
-        )
+      .replace(
+        /&/g,
+        "&amp;"
+      )
 
-        .replace(
-          /</g,
-          "&lt;"
-        )
+      .replace(
+        /</g,
+        "&lt;"
+      )
 
-        .replace(
-          />/g,
-          "&gt;"
-        )
+      .replace(
+        />/g,
+        "&gt;"
+      )
 
-        .replace(
-          /"/g,
-          "&quot;"
-        )
+      .replace(
+        /"/g,
+        "&quot;"
+      )
 
-        .replace(
-          /'/g,
-          "&#039;"
-        );
+      .replace(
+        /'/g,
+        "&#039;"
+      );
 
     }
 
@@ -1145,4 +1565,4 @@ content="width=device-width, initial-scale=1.0"
 
 </body>
 
-
+</html>
